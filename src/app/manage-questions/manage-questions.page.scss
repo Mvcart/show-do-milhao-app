@@ -1,0 +1,32 @@
+$box-color: #ef6f6a;
+$box-color-secondary: #ec4743;
+$background: #01406b;
+$background-secondary: #022c5e;
+
+ion-content {
+  --background: linear-gradient(#01406b, #022c5e);
+}
+
+ion-card {
+  margin: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  ion-card-content {
+    ion-input {
+      margin-bottom: 15px;
+    }
+
+    ion-button {
+      --background: #3880ff;
+      --color: white;
+      width: 100%;
+    }
+  }
+}
