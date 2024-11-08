@@ -1,0 +1,7 @@
+{
+  "name": "show-milhao",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
