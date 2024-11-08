@@ -1,0 +1,35 @@
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    --background: #f4f4f4; /* Cor de fundo opcional para o conteúdo */
+  }
+  
+  .login-container {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff; /* Cor de fundo para o formulário */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar o formulário */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centraliza o conteúdo dentro do contêiner */
+    flex-direction: column;
+    text-align: center; /* Alinha o texto ao centro */
+  }
+  
+  ion-item {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  ion-button {
+    margin-top: 20px;
+    --background: #3880ff; /* Cor personalizada para o botão */
+    --color: #ffffff; /* Cor do texto do botão */
+    --border-radius: 4px; /* Bordas arredondadas no botão */
+  }

@@ -1,0 +1,45 @@
+$box-color: #ef6f6a;
+$box-color-secondary: #ec4743;
+$background: #01406b;
+$background-secondary: #022c5e;
+
+ion-content {
+  --background: linear-gradient(#01406b, #022c5e);
+}
+
+.content-logo {
+  margin-bottom: 0px; /* Espaço abaixo da logo */
+  text-align: center; /* Opcional: centraliza a logo */
+}
+
+.content-logo img {
+  max-width: 350px;
+  max-height: 350px;
+  height: auto;
+  width: auto;
+}
+
+.content-page {
+  background-image: linear-gradient(#01406b, #022c5e);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 0px; /* Espaço acima dos botões */
+}
+
+.yellow-button {
+  background-color: #ffc107;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 5px;
+}

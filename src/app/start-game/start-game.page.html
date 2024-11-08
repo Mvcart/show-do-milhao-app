@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Iniciar Rodada</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="popup-content">
+    <h2>Insira o valor da rodada e o número de questões</h2>
+    
+    <!-- Caixa de texto para inserir o valor da rodada -->
+    <ion-item>
+      <ion-label position="floating">Valor da Rodada</ion-label>
+      <ion-input type="number" [(ngModel)]="valorRodada" min="1"></ion-input>
+    </ion-item>
+
+    <!-- Caixa de texto para inserir o número de questões -->
+    <ion-item>
+      <ion-label position="floating">Número de Questões</ion-label>
+      <ion-input type="number" [(ngModel)]="numeroQuestoes" min="1"></ion-input>
+    </ion-item>
+
+    <div class="button-group">
+      <!-- Botão para começar o jogo -->
+      <ion-button expand="block" color="success" (click)="iniciarJogo()">Começar</ion-button>
+      <!-- Botão para cancelar -->
+      <ion-button expand="block" color="danger" (click)="cancelar()">Cancelar</ion-button>
+    </div>
+  </div>
+  
+  <!-- Botão para selecionar o arquivo de música -->
+  <div class="music-button-container">
+    <label class="custom-file-upload">
+      <input type="file" accept="audio/*" (change)="onMusicFileSelected($event)" />
+      Escolher Música
+    </label>
+  </div>
+</ion-content>

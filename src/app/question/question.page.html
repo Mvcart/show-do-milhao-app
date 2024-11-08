@@ -1,0 +1,59 @@
+<ion-content class="content-page">
+  <!-- Camada de Sobreposição para a Animação de Piscar -->
+  <div class="overlay" [ngClass]="answerClass"></div>
+  
+  <!-- Exibe a questão dinamicamente se disponível -->
+  <div class="question-box" *ngIf="curQuestion" aria-live="polite">
+    <div class="question">
+      <p>{{ curQuestion.title }}</p>
+      <div>
+        <!-- Exibe o tempo dinamicamente -->
+        <div class="time">{{ timeLeft }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exibe as respostas dinamicamente -->
+  <div class="answers" *ngIf="curQuestion && curQuestion.answers">
+    <div
+      *ngFor="let answer of curQuestion.answers; let n = index"
+      class="answer-item"
+      (click)="doAnswer(answer)"
+    >
+      <div class="number">{{ n + 1 }}</div>
+      <div class="answer">{{ answer.description }}</div>
+    </div>
+  </div>
+
+  <!-- Exibe o prêmio dinamicamente -->
+  <div class="info" *ngIf="prizeInfo">
+    <ion-grid class="centered-grid">
+      <ion-row class="centered-row">
+        <ion-col size="4" class="centered-col">
+          <div class="yellow-button ion-text-center">
+            ERRAR: {{ prizeInfo.wrongAnswer | currency: 'BRL': 'symbol': '1.2-2' }}
+          </div>
+        </ion-col>
+
+        <ion-col size="4" class="centered-col">
+          <div class="yellow-button ion-text-center" (click)="giveUp()">
+            PARAR: {{ prizeInfo.quit | currency: 'BRL': 'symbol': '1.2-2' }}
+          </div>
+        </ion-col>
+
+        <ion-col size="4" class="centered-col">
+          <div class="yellow-button ion-text-center">
+            ACERTAR: {{ prizeInfo.correctAnswer | currency: 'BRL': 'symbol': '1.2-2' }}
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Botão de Pausar/Reproduzir Música -->
+  <div class="stop-container">
+    <ion-button expand="block" color="danger" (click)="toggleMusic()">
+      {{ isMusicPlaying ? 'Pausar Música' : 'Retomar Música' }}
+    </ion-button>
+  </div>
+</ion-content>

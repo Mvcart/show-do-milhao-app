@@ -1,0 +1,23 @@
+<!-- src/app/ending/ending.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ message }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Prêmio Total: R$ {{ totalPrize }}</p>
+      <p>Questões Jogadas: {{ numeroQuestoes }}</p>
+      <p>Tipo de Término: {{ endingType }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="full" (click)="iniciarNovoJogo()">Iniciar Novo Jogo</ion-button>
+  <ion-button expand="full" (click)="irParaMenu()">Voltar para o Menu</ion-button>
+</ion-content>

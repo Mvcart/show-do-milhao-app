@@ -1,0 +1,37 @@
+.popup-content {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .music-button-container {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 16px;
+  }
+  
+  .custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f53d3d;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Oculta o input padrão de arquivo */
+  .custom-file-upload input[type="file"] {
+    display: none;
+  }
+  
