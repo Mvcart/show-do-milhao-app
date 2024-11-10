@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
+import { StartGamePage } from '../start-game/start-game.page';
 
 @Component({
   selector: 'app-menu',
@@ -8,10 +9,16 @@ import { NavController } from '@ionic/angular';
 })
 export class MenuPage {
 
-  constructor(private navCtrl: NavController) { }
+  constructor(
+    private navCtrl: NavController,
+    private modalCtrl: ModalController
+  ) { }
 
-  toQuestion() {
-    this.navCtrl.navigateForward('/start-game');
+  async toStartGame() {
+    const modal = await this.modalCtrl.create({
+      component: StartGamePage,  // O modal a ser exibido
+    });
+    return await modal.present(); // Exibe o modal
   }
 
   toEditQuestions() {

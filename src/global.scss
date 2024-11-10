@@ -34,4 +34,12 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Estilos globais para o modal */
+.custom-modal {
+    --width: 90%;
+    --max-width: 600px;
+    --height: auto;
+    --border-radius: 10px;
+  }  

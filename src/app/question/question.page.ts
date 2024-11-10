@@ -21,6 +21,7 @@ export class QuestionPage implements OnInit, OnDestroy {
   isMusicPlaying: boolean = true;
   answerClass: string = '';
   totalPrize: number = 0;
+  numQuestionsPlayed: number = 0;
 
   constructor(
     private navCtrl: NavController,
@@ -31,23 +32,23 @@ export class QuestionPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.totalPrize = +params['totalPrize'] || 0;
       const numeroQuestoes = +params['numeroQuestoes'] || 0;
-  
+
       if (this.totalPrize && numeroQuestoes) {
         // Iniciar a música antes de qualquer outra coisa
         if (!this.audioService.isPlaying()) {
           this.audioService.playMusic();
         }
-  
+
         // Inicia o jogo
         this.restartGame(numeroQuestoes);
       } else {
         console.error('Parâmetros incorretos');
       }
     });
-  }   
+  }
 
   ngOnDestroy(): void {
     this.clearTimer();
@@ -56,7 +57,9 @@ export class QuestionPage implements OnInit, OnDestroy {
 
   toggleMusic(): void {
     this.isMusicPlaying = !this.isMusicPlaying;
-    this.isMusicPlaying ? this.audioService.playMusic() : this.audioService.pauseMusic();
+    this.isMusicPlaying
+      ? this.audioService.playMusic()
+      : this.audioService.pauseMusic();
   }
 
   // Função centralizada para ler textos e pausar/retomar música
@@ -64,12 +67,12 @@ export class QuestionPage implements OnInit, OnDestroy {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'pt-BR';
-  
+
       if (this.isMusicPlaying && this.audioService.isPlaying()) {
         // Reduz o volume da música antes de falar
         this.audioService.setVolume(0.2); // Volume reduzido
       }
-  
+
       utterance.onend = () => {
         if (this.isMusicPlaying) {
           // Restaura o volume da música após o término da fala
@@ -77,12 +80,12 @@ export class QuestionPage implements OnInit, OnDestroy {
           this.audioService.playMusic();
         }
       };
-  
+
       window.speechSynthesis.speak(utterance);
     } else {
       console.error('Speech Synthesis API não disponível neste navegador.');
     }
-  }  
+  }
 
   // Carrega uma pergunta
   loadQuestion(): void {
@@ -92,7 +95,11 @@ export class QuestionPage implements OnInit, OnDestroy {
       this.timeLeft = environment.timePerQuestion;
       this.speakText(this.curQuestion.title);
     } else {
-      this.finish('Fim do jogo', 'Todas as perguntas foram respondidas!', 'gameOver');
+      this.finish(
+        'Fim de jogo',
+        'Todas as perguntas foram respondidas!',
+        'gameOver'
+      );
     }
   }
 
@@ -104,32 +111,46 @@ export class QuestionPage implements OnInit, OnDestroy {
     this.startTimer();
   }
 
-  async finish(title: string, message: string, endingType: string): Promise<void> {
-  this.clearTimer();
+  async finish(
+    title: string,
+    message: string,
+    endingType: string
+  ): Promise<void> {
+    this.clearTimer();
 
-  let modal: HTMLIonModalElement | null = null;
-  try {
-    modal = await this.modalCtrl.create({
-      component: EndingPage,
-      componentProps: {
-        title,
-        message,
-        endingType,
-        totalPrize: this.totalPrize,  // Passando o prêmio total para o modal
-        numeroQuestoes: this.questionService.getTotalQuestions(), // Passando o número de questões
-      },
-      backdropDismiss: false,
-    });
+    let modal: HTMLIonModalElement | null = null;
+    let prizeToSend: number = 0; // Variável para armazenar o prêmio correto
 
-    if (modal) {
-      await modal.present();
+    // Determina o prêmio a ser enviado
+    if (endingType === 'wrongAnswer') {
+      prizeToSend = this.prizeInfo?.wrongAnswer || 0; // Se errou, envia o prêmio para erro
+    } else if (endingType === 'quit') {
+      prizeToSend = this.prizeInfo?.quit || 0; // Se parou, envia o prêmio para parar
+    } else {
+      prizeToSend = this.prizeInfo?.correctAnswer || 0; // Se o jogo terminou normalmente
     }
-  } catch (error) {
-    console.error('Erro ao criar ou apresentar o modal:', error);
-  }
-}
 
-  
+    try {
+      modal = await this.modalCtrl.create({
+        component: EndingPage,
+        componentProps: {
+          title,
+          message,
+          endingType,
+          totalPrize: prizeToSend, // Passando o prêmio específico para o modal
+          numeroQuestoes: this.numQuestionsPlayed, // Passando o número de questões
+        },
+        backdropDismiss: false,
+      });
+
+      if (modal) {
+        await modal.present();
+      }
+    } catch (error) {
+      console.error('Erro ao criar ou apresentar o modal:', error);
+    }
+  }
+
   async cancelar() {
     try {
       const modal = await this.modalCtrl.getTop(); // Verifica se existe um modal ativo no topo
@@ -139,7 +160,7 @@ export class QuestionPage implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Erro ao tentar fechar o modal:', error);
     }
-  }  
+  }
 
   // Inicia o temporizador
   private startTimer(): void {
@@ -147,7 +168,7 @@ export class QuestionPage implements OnInit, OnDestroy {
     this.intervalID = setInterval(() => {
       if (--this.timeLeft === 0) {
         this.clearTimer();
-        this.finish('Fim do jogo', 'Seu tempo acabou!', 'timeout');
+        this.finish('Fim de jogo', 'Seu tempo acabou!', 'timeout');
       }
     }, 1000);
   }
@@ -161,7 +182,7 @@ export class QuestionPage implements OnInit, OnDestroy {
   }
 
   giveUp(): void {
-    this.finish('Fim do jogo', 'Você parou!', 'quit');
+    this.finish('Fim de jogo', 'Você parou!', 'quit');
   }
 
   // O jogador responde
@@ -171,11 +192,16 @@ export class QuestionPage implements OnInit, OnDestroy {
     if (answer.isRight) {
       this.speakText('Certa resposta');
       this.blinkScreen('correct-answer-blink');
+      this.numQuestionsPlayed++;
       setTimeout(() => this.loadQuestion(), 500);
     } else {
       this.speakText('Você errou');
       this.blinkScreen('wrong-answer-blink');
-      setTimeout(() => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'), 500);
+      this.numQuestionsPlayed++;
+      setTimeout(
+        () => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'),
+        500
+      );
     }
   }
 

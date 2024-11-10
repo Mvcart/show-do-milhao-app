@@ -1,59 +1,109 @@
 .content-center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    min-height: 100vh; /* Usa a altura mínima da tela */
-    background-color: #f4f5f8;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  min-height: 100%; /* Garante que o conteúdo ocupe a altura total */
+  background-color: #f4f5f8;
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  max-width: 600px; /* Limita a largura para que o conteúdo não fique muito largo */
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+ion-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 3%;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.prize-info {
+  background-color: #fffae6;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.prize-info p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.prize-text span {
+  font-weight: 700;
+  color: #ff9800;
+  font-size: 22px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column; /* Coloca os botões um embaixo do outro */
+  justify-content: center; /* Centraliza os botões verticalmente */
+  align-items: center; /* Centraliza os botões horizontalmente */
+  width: 100%; /* Garante que o grupo de botões ocupe toda a largura */
+  max-width: 400px; /* Define a largura máxima para os botões */
+  gap: 10px; /* Aumenta o espaçamento entre os botões */
+  margin: 0 auto; /* Centraliza horizontalmente o grupo de botões */
+}
+
+ion-button {
+  width: 100%; /* Faz os botões ocuparem toda a largura permitida */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px; /* Botões com bordas arredondadas */
+  transition: transform 0.3s ease;
+}
+
+ion-button:hover {
+  transform: translateY(-3px); /* Animação de levitação ao passar o mouse */
+}
+
+ion-button:active {
+  transform: translateY(1px); /* Efeito de pressionamento */
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 768px) {
+  .content ion-title {
+    font-size: 20px;
   }
-  
-  .message-container {
-    margin-bottom: 20px;
+
+  .content p {
+    font-size: 16px;
   }
-  
-  .button-group {
-    display: flex;
-    flex-direction: column; /* Coloca os botões um embaixo do outro */
-    justify-content: center; /* Centraliza os botões verticalmente */
-    align-items: center; /* Centraliza os botões horizontalmente */
-    width: 100%; /* Garante que o grupo de botões ocupe toda a largura */
-    max-width: 400px; /* Define a largura máxima para os botões */
-    gap: 10px; /* Espaçamento entre os botões */
-    margin: 0 auto; /* Centraliza horizontalmente o grupo de botões */
+
+  .prize-info p {
+    font-size: 16px;
   }
-  
-  ion-button {
-    width: 100%; /* Faz os botões ocuparem toda a largura permitida */
-    margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  .content ion-title {
+    font-size: 18px;
   }
-  
-  ion-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100%;
+
+  .content p {
+    font-size: 14px;
   }
-  
-  /* MEDIA QUERIES */
-  @media (max-width: 768px) {
-    .message-container h2 {
-      font-size: 20px;
-    }
-  
-    .message-container p {
-      font-size: 16px;
-    }
+
+  .prize-info p {
+    font-size: 14px;
   }
-  
-  @media (max-width: 480px) {
-    .message-container h2 {
-      font-size: 18px;
-    }
-  
-    .message-container p {
-      font-size: 14px;
-    }
-  }
+}

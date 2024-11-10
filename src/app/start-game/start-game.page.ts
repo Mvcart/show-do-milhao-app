@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
-import { AudioService } from '../audio.service'; // Importar o serviço de áudio
+import { AudioService } from '../audio.service';
 import { QuestionService } from '../question.service';
 
 @Component({
@@ -8,19 +8,18 @@ import { QuestionService } from '../question.service';
   templateUrl: './start-game.page.html',
   styleUrls: ['./start-game.page.scss'],
 })
-
 export class StartGamePage {
   valorRodada: number = 0;  // Variável para armazenar o valor da rodada
   numeroQuestoes: number = 0;  // Variável para armazenar o número de questões
   selectedMusic: File | null = null;  // Variável para armazenar o arquivo de música
 
   constructor(
-    private modalCtrl: ModalController,
     private navCtrl: NavController,
+    private modalCtrl: ModalController, // Injeta o ModalController para controle do modal
     private audioService: AudioService, // Injeta o serviço de áudio
     private questionService: QuestionService // Injeta o serviço de perguntas
   ) {}
-  
+
   // Função chamada quando o usuário seleciona um arquivo de música
   onMusicFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -45,18 +44,15 @@ export class StartGamePage {
       await this.modalCtrl.dismiss();
     } else {
       console.error('Por favor, insira valores válidos para a rodada e o número de questões.');
-      return; // Impede o início do jogo se os valores forem inválidos
     }
-  }  
+  }
 
-  // Função para cancelar e redirecionar para o menu
+  // Função para cancelar e fechar o modal
   async cancelar() {
-    // Navega para a página do menu
+    // Fecha o modal e redireciona para o menu, se necessário
+    await this.modalCtrl.dismiss();
     await this.navCtrl.navigateRoot('/menu').catch(err => {
       console.error('Erro na navegação para o menu:', err);
     });
-
-    // Fecha o modal após a navegação
-    await this.modalCtrl.dismiss();
   }
 }

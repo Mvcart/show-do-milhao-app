@@ -1,37 +1,34 @@
-.popup-content {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  .button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .music-button-container {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 16px;
-  }
-  
-  .custom-file-upload {
-    display: inline-block;
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #f53d3d;
-    color: white;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-  }
-  
-  .custom-file-upload:hover {
-    background-color: #d32f2f;
-  }
-  
-  /* Oculta o input padrão de arquivo */
-  .custom-file-upload input[type="file"] {
-    display: none;
-  }
-  
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  text-align: center;
+}
+
+.content {
+  width: 100%;
+  padding: 20px;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px; /* Espaço acima dos botões */
+}
+
+.custom-file-upload {
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-file-upload input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}

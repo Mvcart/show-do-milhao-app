@@ -1,23 +1,23 @@
-<!-- src/app/ending/ending.page.html -->
 <ion-header>
   <ion-toolbar>
     <ion-title>{{ title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{ message }}</ion-card-title>
-    </ion-card-header>
+<ion-content class="content-center">
+  <div class="content">
+    <ion-title>{{ message }}</ion-title>
 
-    <ion-card-content>
-      <p>Prêmio Total: R$ {{ totalPrize }}</p>
-      <p>Questões Jogadas: {{ numeroQuestoes }}</p>
-      <p>Tipo de Término: {{ endingType }}</p>
-    </ion-card-content>
-  </ion-card>
+    <!-- Seção de Prêmio com Destaque -->
+    <div class="prize-info">
+      <p class="prize-text">Seu prêmio: <span>{{ totalPrize | currency: 'BRL': 'symbol': '1.2-2' }}</span></p>
+      <p>Questões Jogadas: <strong>{{ numeroQuestoes }}</strong></p>
+    </div>
 
-  <ion-button expand="full" (click)="iniciarNovoJogo()">Iniciar Novo Jogo</ion-button>
-  <ion-button expand="full" (click)="irParaMenu()">Voltar para o Menu</ion-button>
+    <!-- Botões para iniciar novo jogo ou voltar ao menu -->
+    <div class="button-group">
+      <ion-button expand="full" color="primary" (click)="iniciarNovoJogo()">Iniciar Novo Jogo</ion-button>
+      <ion-button expand="full" color="secondary" (click)="irParaMenu()">Voltar para o Menu</ion-button>
+    </div>
+  </div>
 </ion-content>
