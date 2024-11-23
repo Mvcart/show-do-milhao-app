@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { QuestionService } from '../question.service';
-import { ModalController, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { QuestionService } from '../manage.questions.service';
 
 @Component({
   selector: 'app-manage-questions',
@@ -10,46 +10,44 @@ import { ModalController, NavController } from '@ionic/angular';
 export class ManageQuestionsPage {
   question = {
     title: '',
-    correctAnswer: '',
+    correctAnswer: null,
     answers: [
-      { description: '', isRight: false },
-      { description: '', isRight: false },
-      { description: '', isRight: false }
-    ]
+      { description: '' },
+      { description: '' },
+      { description: '' },
+      { description: '' },
+    ],
   };
 
   constructor(
-    private questionService: QuestionService,
-    private navCtrl: NavController, 
-    private modalCtrl: ModalController
+    private router: Router,
+    private QuestionService: QuestionService
   ) {}
 
-  saveQuestion() {
-    // Marcando a resposta correta
-    const correctIndex = parseInt(this.question.correctAnswer, 10);
-    if (!isNaN(correctIndex) && correctIndex >= 0 && correctIndex < this.question.answers.length) {
-      this.question.answers.forEach((answer, index) => {
-        answer.isRight = (index === correctIndex);
-      });
-
-      this.questionService.addQuestion(this.question).then(() => {
-        alert('Pergunta adicionada com sucesso');
-      }).catch(err => {
-        console.error('Erro ao adicionar pergunta:', err);
-        alert('Erro ao adicionar pergunta');
-      });
-    } else {
-      alert('Índice da resposta correta inválido');
-    }
+  saveQuestion(): void {
+    this.QuestionService.saveQuestion(this.question);
+    alert('Pergunta salva com sucesso!');
+    this.resetQuestionForm();
   }
 
-  async irParaMenu() {
-    try {
-      this.navCtrl.navigateRoot('/menu'); // Navega para o menu principal
-    } catch (err) {
-      console.error('Erro ao resetar o jogo:', err);
-      alert('Erro ao ir para o menu');
-    }
+  exportQuestions(): void {
+    this.QuestionService.exportQuestions();
   }
-  
+
+  irParaMenu(): void {
+    this.router.navigate(['/menu']);
+  }
+
+  private resetQuestionForm(): void {
+    this.question = {
+      title: '',
+      correctAnswer: null,
+      answers: [
+        { description: '' },
+        { description: '' },
+        { description: '' },
+        { description: '' },
+      ],
+    };
+  }
 }

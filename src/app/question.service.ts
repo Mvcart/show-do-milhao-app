@@ -6,6 +6,12 @@ import { Question } from './models/question';
   providedIn: 'root'
 })
 export class QuestionService {
+  exportQuestions() {
+    throw new Error('Method not implemented.');
+  }
+  importQuestions(file: any) {
+    throw new Error('Method not implemented.');
+  }
 
   private questionCount: number = 0;
   private usedQuestions: Question[] = [];

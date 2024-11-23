@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Adicionar Pergunta</ion-title>
+    <ion-title>Gerenciar Perguntas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <ion-card-title color="#ffffff">Adicionar Pergunta</ion-card-title>
+      <ion-card-title>Adicionar Pergunta</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
@@ -38,12 +38,9 @@
         <ion-input [(ngModel)]="question.answers[2].description"></ion-input>
       </ion-item>
 
-      <ion-button expand="block" (click)="saveQuestion()"
-        >Salvar Pergunta</ion-button
-      >
-      <ion-button expand="block" color="primary" (click)="irParaMenu()"
-        >Ir para o Menu</ion-button
-      >
+      <ion-button expand="block" (click)="saveQuestion()">Salvar Pergunta</ion-button>
+      <ion-button expand="block" (click)="exportQuestions()">Exportar Perguntas</ion-button>
+      <ion-button expand="block" color="primary" (click)="irParaMenu()">Ir para o Menu</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

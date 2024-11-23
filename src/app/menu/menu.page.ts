@@ -8,6 +8,8 @@ import { StartGamePage } from '../start-game/start-game.page';
   styleUrls: ['./menu.page.scss'],
 })
 export class MenuPage {
+  authService: any;
+  router: any;
 
   constructor(
     private navCtrl: NavController,
@@ -23,5 +25,10 @@ export class MenuPage {
 
   toEditQuestions() {
     this.navCtrl.navigateForward('/manage-questions');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -1,27 +1,29 @@
 import { Injectable } from '@angular/core';
+import { SecureStorageService } from './secure-storage.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated = false;
-  redirectUrl: string | null = null; // URL para redirecionar após login
+  redirectUrl: string | null = null; // Propriedade adicionada
 
   login(username: string, password: string): boolean {
-    if (username === 'cliente' && password === 'senha') {
+    if (username === 'jushow' && password === 'senha123') {
+      SecureStorageService.setItem('isLoggedIn', true);
       this.isAuthenticated = true;
-      localStorage.setItem('auth', 'true');
       return true;
     }
     return false;
   }
 
-  logout() {
+  logout(): void {
+    SecureStorageService.removeItem('isLoggedIn');
     this.isAuthenticated = false;
-    localStorage.removeItem('auth');
+    this.redirectUrl = null; // Limpa o redirecionamento
   }
 
   isLoggedIn(): boolean {
-    return this.isAuthenticated || localStorage.getItem('auth') === 'true';
+    return this.isAuthenticated || SecureStorageService.getItem('isLoggedIn');
   }
 }

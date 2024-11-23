@@ -16,14 +16,13 @@ export class LoginPage {
     private router: Router // Use Router para navegação
   ) {}
 
-  login() {
-    if (this.authService.login(this.username, this.password)) {
-      // Redireciona para a página inicial ou para a URL desejada
+  login(): void {
+    const success = this.authService.login(this.username, this.password);
+    if (success) {
       const redirectUrl = this.authService.redirectUrl || '/menu';
       this.router.navigate([redirectUrl]);
     } else {
-      console.log('Credenciais incorretas');
-      // Exibe uma mensagem de erro para o usuário, se necessário
+      alert('Usuário ou senha inválidos!');
     }
-  }
+  }  
 }

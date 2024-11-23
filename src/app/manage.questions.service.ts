@@ -1,35 +1,60 @@
 import { Injectable } from '@angular/core';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, Firestore } from '@angular/fire/firestore';
-import { inject } from '@angular/core';
-import { Question } from './models/question';
+import { SecureStorageService } from './secure-storage.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuestionService {
-  private firestore: Firestore = inject(Firestore);
-
-  // Adicionar uma pergunta
-  addQuestion(question: Question) {
-    const questionsCollection = collection(this.firestore, 'questions');
-    return addDoc(questionsCollection, question);
+  QuestionService: any;
+  getQuestions(): any[] {
+    return SecureStorageService.getItem('questions') || [];
   }
 
-  // Obter todas as perguntas
-  getQuestions() {
-    const questionsCollection = collection(this.firestore, 'questions');
-    return getDocs(questionsCollection);
+  saveQuestion(question: any): void {
+    const questions = this.getQuestions();
+    questions.push(question);
+    SecureStorageService.setItem('questions', questions);
   }
 
-  // Atualizar uma pergunta
-  updateQuestion(id: string, question: Partial<Question>) {
-    const questionDoc = doc(this.firestore, `questions/${id}`);
-    return updateDoc(questionDoc, question);
+  question(arg0: string, question: any) {
+    throw new Error('Method not implemented.');
+  }
+  resetQuestionForm() {
+    throw new Error('Method not implemented.');
+  }
+  
+
+  deleteQuestion(index: number): void {
+    const questions = this.getQuestions();
+    questions.splice(index, 1);
+    SecureStorageService.setItem('questions', questions);
+  }
+  exportQuestions(): void {
+    const questions = this.getQuestions();
+    if (!questions.length) {
+      alert('Nenhuma pergunta disponível para exportar.');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(questions)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'questions.json';
+    link.click();
   }
 
-  // Deletar uma pergunta
-  deleteQuestion(id: string) {
-    const questionDoc = doc(this.firestore, `questions/${id}`);
-    return deleteDoc(questionDoc);
+  importQuestions(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const questions = JSON.parse(reader.result as string);
+        SecureStorageService.setItem('questions', questions);
+        alert('Perguntas importadas com sucesso!');
+      } catch (e) {
+        alert('Erro ao importar perguntas.');
+      }
+    };
+    reader.readAsText(file);
   }
 }
