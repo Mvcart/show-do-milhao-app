@@ -1,6 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 
-const secretKey = 'sua-chave-secreta'; //substitua por uma chave segura
+const secretKey = 'jushow'; //substitua por uma chave segura
 
 export class SecureStorageService {
     static setItem(key: string, value: any): void {

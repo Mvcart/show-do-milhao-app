@@ -62,21 +62,18 @@ export class QuestionPage implements OnInit, OnDestroy {
       : this.audioService.pauseMusic();
   }
 
-  // Função centralizada para ler textos e pausar/retomar música
   speakText(text: string): void {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'pt-BR';
 
       if (this.isMusicPlaying && this.audioService.isPlaying()) {
-        // Reduz o volume da música antes de falar
-        this.audioService.setVolume(0.2); // Volume reduzido
+        this.audioService.setVolume(0.2);
       }
 
       utterance.onend = () => {
         if (this.isMusicPlaying) {
-          // Restaura o volume da música após o término da fala
-          this.audioService.setVolume(1); // Volume normal
+          this.audioService.setVolume(1);
           this.audioService.playMusic();
         }
       };
@@ -87,14 +84,21 @@ export class QuestionPage implements OnInit, OnDestroy {
     }
   }
 
-  // Carrega uma pergunta
   loadQuestion(): void {
-    this.curQuestion = this.questionService.nextQuestion();
-    if (this.curQuestion) {
-      this.prizeInfo = this.questionService.getPrizeInfo();
-      this.timeLeft = environment.timePerQuestion;
-      this.speakText(this.curQuestion.title);
-    } else {
+    this.clearTimer(); // Garante que o temporizador anterior seja limpo.
+  
+    try {
+      this.curQuestion = this.questionService.nextQuestion(); // Obtém a próxima pergunta.
+      this.prizeInfo = this.questionService.getPrizeInfo(); // Atualiza os prêmios.
+      this.timeLeft = environment.timePerQuestion; // Reinicia o tempo.
+      
+      if (this.curQuestion) {
+        console.log('Carregando pergunta:', this.curQuestion);
+        this.speakText(this.curQuestion.title); // Fala o título da pergunta.
+        this.startTimer(); // Inicia o temporizador.
+      }
+    } catch (error) {
+      console.error('Erro ao carregar a pergunta:', error);
       this.finish(
         'Fim de jogo',
         'Todas as perguntas foram respondidas!',
@@ -102,32 +106,28 @@ export class QuestionPage implements OnInit, OnDestroy {
       );
     }
   }
-
+  
   restartGame(numeroQuestoes: number): void {
     this.clearTimer();
     this.questionService.setPrizeValues(this.totalPrize, numeroQuestoes);
     this.questionService.resetGame(numeroQuestoes);
+    this.numQuestionsPlayed = 0;
     this.loadQuestion();
     this.startTimer();
   }
 
-  async finish(
-    title: string,
-    message: string,
-    endingType: string
-  ): Promise<void> {
+  async finish(title: string, message: string, endingType: string): Promise<void> {
     this.clearTimer();
 
     let modal: HTMLIonModalElement | null = null;
-    let prizeToSend: number = 0; // Variável para armazenar o prêmio correto
+    let prizeToSend: number = 0;
 
-    // Determina o prêmio a ser enviado
     if (endingType === 'wrongAnswer') {
-      prizeToSend = this.prizeInfo?.wrongAnswer || 0; // Se errou, envia o prêmio para erro
+      prizeToSend = this.prizeInfo?.wrongAnswer || 0;
     } else if (endingType === 'quit') {
-      prizeToSend = this.prizeInfo?.quit || 0; // Se parou, envia o prêmio para parar
+      prizeToSend = this.prizeInfo?.quit || 0;
     } else {
-      prizeToSend = this.prizeInfo?.correctAnswer || 0; // Se o jogo terminou normalmente
+      prizeToSend = this.prizeInfo?.correctAnswer || 0;
     }
 
     try {
@@ -137,8 +137,8 @@ export class QuestionPage implements OnInit, OnDestroy {
           title,
           message,
           endingType,
-          totalPrize: prizeToSend, // Passando o prêmio específico para o modal
-          numeroQuestoes: this.numQuestionsPlayed, // Passando o número de questões
+          totalPrize: prizeToSend,
+          numeroQuestoes: this.numQuestionsPlayed,
         },
         backdropDismiss: false,
       });
@@ -153,16 +153,15 @@ export class QuestionPage implements OnInit, OnDestroy {
 
   async cancelar() {
     try {
-      const modal = await this.modalCtrl.getTop(); // Verifica se existe um modal ativo no topo
+      const modal = await this.modalCtrl.getTop();
       if (modal) {
-        await modal.dismiss(); // Fecha o modal se ele existir
+        await modal.dismiss();
       }
     } catch (error) {
       console.error('Erro ao tentar fechar o modal:', error);
     }
   }
 
-  // Inicia o temporizador
   private startTimer(): void {
     this.clearTimer();
     this.intervalID = setInterval(() => {
@@ -173,7 +172,6 @@ export class QuestionPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  // Limpa o temporizador
   private clearTimer(): void {
     if (this.intervalID) {
       clearInterval(this.intervalID);
@@ -185,27 +183,25 @@ export class QuestionPage implements OnInit, OnDestroy {
     this.finish('Fim de jogo', 'Você parou!', 'quit');
   }
 
-  // O jogador responde
   doAnswer(answer: QuestionAnswer): void {
     this.speakText(answer.description);
 
-    if (answer.isRight) {
+    if (this.curQuestion && this.curQuestion.answers[this.curQuestion.correctAnswer].description === answer.description) {
       this.speakText('Certa resposta');
       this.blinkScreen('correct-answer-blink');
       this.numQuestionsPlayed++;
       setTimeout(() => this.loadQuestion(), 500);
+      const currentQuestion = this.questionService.getCurrentQuestion();
+console.log('Resposta correta esperada:', currentQuestion?.answers[currentQuestion?.correctAnswer]);
+
     } else {
       this.speakText('Você errou');
       this.blinkScreen('wrong-answer-blink');
       this.numQuestionsPlayed++;
-      setTimeout(
-        () => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'),
-        500
-      );
+      setTimeout(() => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'), 500);
     }
   }
 
-  // Função para piscar a tela
   blinkScreen(className: string): void {
     this.answerClass = className;
     setTimeout(() => (this.answerClass = ''), 1500);

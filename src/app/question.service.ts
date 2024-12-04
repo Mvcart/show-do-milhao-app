@@ -1,45 +1,48 @@
 import { Injectable } from '@angular/core';
 import { PrizeInfo } from './models/prize-info';
 import { Question } from './models/question';
+import { SecureStorageService } from './secure-storage.service';
+import * as CryptoJS from 'crypto-js';//
+
+const STORAGE_KEY = 'questions';
+const SECRET_KEY = 'jushow'; // Chave para criptografia
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuestionService {
-  exportQuestions() {
-    throw new Error('Method not implemented.');
-  }
-  importQuestions(file: any) {
-    throw new Error('Method not implemented.');
-  }
-
   private questionCount: number = 0;
   private usedQuestions: Question[] = [];
-  private questions: Question[] = [
-  {
-    title: 'Um número múltiplo de cinco é?',
-    answers: [
-      {description: 'Um número que é divisível por 3', isRight: false},
-      {description: 'Um número que é divisível por 5', isRight: true},
-      {description: 'Um número que multiplicado por 5 é par', isRight: false},
-      {description: 'Um número que somado com 5 é impar', isRight: false},
-    ],
-    level: 1
-  },
+  private questions: Question[] = [];
 
-  {
-    title: 'Qual o nome do principalo personagem do anime Dragon Ball?',
-    answers: [
-      {description: 'Goku', isRight: true},
-      {description: 'Freeza', isRight: false},
-      {description: 'Mabel', isRight: false},
-      {description: 'Leon Kennedy', isRight: false},
-    ],
-    level: 1
-  },
+  private originalQuestions: Question[] = [
+    // Perguntas padrão
+    {
+      title: 'Um número múltiplo de cinco é?',
+      correctAnswer: 1,
+      answers: [
+        { description: 'Um número que é divisível por 3', isRight: false },
+        { description: 'Um número que é divisível por 5', isRight: true },
+        { description: 'Um número que multiplicado por 5 é par', isRight: false },
+        { description: 'Um número que somado com 5 é impar', isRight: false },
+      ],
+      level: 1,
+    },
+    {
+      title: 'Qual o nome do principal personagem do anime Dragon Ball?',
+      correctAnswer: 0,
+      answers: [
+        { description: 'Goku', isRight: true },
+        { description: 'Freeza', isRight: false },
+        { description: 'Mabel', isRight: false },
+        { description: 'Leon Kennedy', isRight: false },
+      ],
+      level: 1,
+    },
 
   {
     title: 'De quanto em quanto tempo acontece uma Copa do Mundo?',
+    correctAnswer: 0,
     answers: [
       {description: 'De dois em dois anos', isRight: false},
       {description: 'De oito em oitro anos', isRight: false},
@@ -51,6 +54,7 @@ export class QuestionService {
 
   {
     title: 'Quantos meses do ano possuem 28 dias?',
+    correctAnswer: 3,
     answers: [
       {description: 'Apenas um mês', isRight: false},
       {description: 'Seis meses', isRight: false},
@@ -62,6 +66,7 @@ export class QuestionService {
 
   {
     title: 'Qual a cor que simboliza a esperança?',
+    correctAnswer: 2,
     answers: [
       {description: 'Branco', isRight: false},
       {description: 'Verde', isRight: true},
@@ -73,6 +78,7 @@ export class QuestionService {
 
   {
     title: 'Quais os dois primeiros nomes da apresentadora Xuxa?',
+    correctAnswer: 2,
     answers: [
       {description: 'Maria de Lourdes', isRight: false},
       {description: 'Maria do Carmo', isRight: false},
@@ -84,6 +90,7 @@ export class QuestionService {
 
   {
     title: 'Qual o presidente brasileiro responsável pela constução de brasília?',
+    correctAnswer: 1,
     answers: [
       {description: 'Jãnio Quadros', isRight: false},
       {description: 'Juscelino Kubitschek', isRight: true},
@@ -95,6 +102,7 @@ export class QuestionService {
 
   {
     title: 'Como chamamos o sono do urso durante o inverno?',
+    correctAnswer: 3,
     answers: [
       {description: 'Preguiça', isRight: false},
       {description: 'Demaio', isRight: false},
@@ -106,6 +114,7 @@ export class QuestionService {
 
   {
     title: 'Segundo a lenda em que fase da lua aparece o lobisomem?',
+    correctAnswer: 1,
     answers: [
       {description: 'Nova', isRight: false},
       {description: 'Cheia', isRight: true},
@@ -117,6 +126,7 @@ export class QuestionService {
 
   {
     title: 'Em que ano foi morto John Lennon?',
+    correctAnswer: 0,
     answers: [
       {description: '1980', isRight: true},
       {description: '1985', isRight: false},
@@ -128,6 +138,7 @@ export class QuestionService {
 
   {
     title: 'Qual foi o último estado criado no Brasil?',
+    correctAnswer: 0,
     answers: [
       {description: 'Tocantins', isRight: true},
       {description: 'Rondônia', isRight: false},
@@ -138,10 +149,11 @@ export class QuestionService {
   },
 
   {
-    title: 'Em qual dos clubes abaixo o jogador Ademir da Guia é ídolo?',
+    title: 'Em qual dos clubes abaixo o jogador Yuri Alberto é ídolo?',
+    correctAnswer: 1,
     answers: [
       {description: 'Santos', isRight: false},
-      {description: 'Palmeiras', isRight: true},
+      {description: 'Corinthians', isRight: true},
       {description: 'Bahia', isRight: false},
       {description: 'São Paulo', isRight: false},
     ],
@@ -150,6 +162,7 @@ export class QuestionService {
 
   {
     title: 'Em qual estado brasileiro ocorreu a guerra de canudos?',
+    correctAnswer: 1,
     answers: [
       {description: 'Sergipe', isRight: false},
       {description: 'Bahia', isRight: true},
@@ -161,6 +174,7 @@ export class QuestionService {
 
   {
     title: 'Qual o nome que se dá a mistura de água com sal?',
+    correctAnswer: 1,
     answers: [
       {description: 'Gangorra', isRight: false},
       {description: 'Salmoura', isRight: true},
@@ -172,6 +186,7 @@ export class QuestionService {
 
   {
     title: 'De onde as abelhas extraem o mel?',
+    correctAnswer: 1,
     answers: [
       {description: 'Rochas', isRight: false},
       {description: 'Flores', isRight: true},
@@ -179,94 +194,174 @@ export class QuestionService {
       {description: 'Água', isRight: false},
     ],
     level: 1
-  },
-  {
-    title: 'Como se chama o ratinho criado por Walt Disney?',
-    answers: [
-      {description: 'Mickey Mouse', isRight: true},
-      {description: 'Pateta', isRight: false},
-      {description: 'Jerry', isRight: false},
-      {description: 'Pink', isRight: false},
-    ],
-    level: 1
   }
   ];
-  
-  private originalQuestions: Question[] = [...this.questions]; // Armazena a lista original
+
   private questionPrizes: number[] = [];
 
-  // Método para definir os valores de prêmios com base no valor da rodada e no número de perguntas
+  constructor() {
+    this.loadQuestionsFromStorage(); // Carrega perguntas ao inicializar o serviço
+  }
+
+  // Método para carregar perguntas do Local Storage
+  private loadQuestionsFromStorage(): void {
+    const encryptedData = localStorage.getItem(STORAGE_KEY);
+    if (encryptedData) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+        const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+        const savedQuestions: Question[] = JSON.parse(decryptedData);
+        this.questions = [...this.originalQuestions, ...savedQuestions]; // Combina perguntas padrão com as salvas
+      } catch (error) {
+        console.error('Erro ao carregar perguntas do Local Storage:', error);
+        this.questions = [...this.originalQuestions]; // Usa apenas perguntas padrão em caso de erro
+      }
+    } else {
+      this.questions = [...this.originalQuestions]; // Usa perguntas padrão se não houver dados no Local Storage
+    }
+    console.log('Perguntas carregadas:', this.questions);
+  }
+
+  // Método para salvar perguntas no Local Storage
+  private saveQuestionsToStorage(): void {
+    try {
+      const encryptedData = CryptoJS.AES.encrypt(
+        JSON.stringify(this.questions),
+        SECRET_KEY
+      ).toString();
+      localStorage.setItem(STORAGE_KEY, encryptedData);
+    } catch (error) {
+      console.error('Erro ao salvar perguntas:', error);
+    }
+  }
+
+  // Adiciona uma pergunta ao serviço e salva no Local Storage
+  addQuestion(question: Question): void {
+    this.questions.push(question);
+    this.saveQuestionsToStorage();
+  }
+  
+
+  // Exclui uma pergunta pelo índice e salva no Local Storage
+  deleteQuestion(index: number): void {
+    const questions = this.getAllQuestions();
+    questions.splice(index, 1); // Remove a pergunta do array
+    const encryptedData = CryptoJS.AES.encrypt(
+      JSON.stringify(questions),
+      'jushow'
+    ).toString();
+    localStorage.setItem('questions', encryptedData); // Atualiza o localStorage
+  }
+  
+  getAllQuestions(): any[] {
+    const encryptedData = localStorage.getItem('questions');
+    if (encryptedData) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, 'jushow'); // Substitua pela sua chave
+        const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+        return JSON.parse(decryptedData);
+      } catch (e) {
+        console.error('Erro ao descriptografar perguntas:', e);
+        return [];
+      }
+    }
+    return [];
+  }
+  
+  // Retorna um número limitado de perguntas
+  //getQuestions(numeroQuestoes: number): Question[] {
+    //return this.questions.slice(0, numeroQuestoes); // Retorna as primeiras N perguntas
+
+  //}
+
+  getCurrentQuestion(): Question | null {
+    if (this.questionCount > 0 && this.questionCount <= this.questions.length) {
+      return this.questions[this.questionCount - 1];
+    }
+    return null;
+  }
+  
+
+  // Método para definir os valores de prêmios
   setPrizeValues(totalPrize: number, numberOfQuestions: number): void {
     this.questionPrizes = [];
-  
-    // Cálculo linear para distribuir o valor total do prêmio entre as perguntas
     const prizeIncrement = totalPrize / numberOfQuestions;
-  
-    // Preenchendo o array de prêmios com valores crescentes
     for (let i = 1; i <= numberOfQuestions; i++) {
       const prizeForThisQuestion = prizeIncrement * i;
       this.questionPrizes.push(prizeForThisQuestion);
     }
-  
-    console.log('Valores dos prêmios (linear):', this.questionPrizes); // Log para depuração
-  }
-
-  getQuestions(numeroQuestoes: number): Question[] {
-    return this.questions.slice(0, numeroQuestoes);
-  }
-
-  addQuestion(question: Question): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.questions.push(question);
-      resolve(); // Resolve a promise após adicionar a pergunta
-    });
-  }
-
-  deleteQuestion(index: number): void {
-    this.questions.splice(index, 1); // Remove a pergunta pelo índice
+    console.log('Valores dos prêmios (linear):', this.questionPrizes);
   }
 
   getPrizeInfo(): PrizeInfo {
     if (this.questionCount <= 0 || this.questionCount > this.questionPrizes.length) {
       return { correctAnswer: 0, wrongAnswer: 0, quit: 0 };
     }
-  
     const curQuestionPrize = this.questionPrizes[this.questionCount - 1] || 0;
     const prevQuestionPrize = this.questionPrizes[this.questionCount - 2] || 0;
     const prevPrevQuestionPrize = this.questionPrizes[this.questionCount - 3] || 0;
-  
+
     return {
-      correctAnswer: curQuestionPrize,  // Prêmio ao acertar
-      wrongAnswer: this.questionCount <= 2 ? 0 : prevPrevQuestionPrize,  // Prêmio ao errar
-      quit: this.questionCount === 1 ? 0 : prevQuestionPrize  // Prêmio ao desistir
+      correctAnswer: curQuestionPrize,
+      wrongAnswer: this.questionCount <= 2 ? 0 : prevPrevQuestionPrize,
+      quit: this.questionCount === 1 ? 0 : prevQuestionPrize,
     };
   }
 
-  // Método para embaralhar as perguntas
-  private shuffleQuestions(): void {
-    this.questions = [...this.originalQuestions]; // Restaura a lista original de perguntas
-    this.questions.sort(() => 0.5 - Math.random()); // Embaralha as perguntas
-    console.log("Perguntas embaralhadas:", this.questions); // Log de depuração
+  resetGame(numeroQuestoes: number): void {
+    this.questionCount = 0;
+    this.shuffleQuestions(); // Embaralha as perguntas
+    this.questions = this.questions.slice(0, numeroQuestoes); // Define o limite de perguntas
+    
+  console.log('Estado do jogo reiniciado:');
+  console.log('Perguntas carregadas:', this.questions);
   }
 
-  // Método que retorna a próxima pergunta na sequência
+  private shuffleQuestions(): void {
+    this.questions.sort(() => 0.5 - Math.random());
+    console.log('Perguntas embaralhadas:', this.questions);
+  }
+
   nextQuestion(): Question {
     if (this.questionCount < this.questions.length) {
       const nextQuestion = this.questions[this.questionCount];
-      this.questionCount++;  // Incrementa o contador APÓS pegar a pergunta
+      this.questionCount++;
       return nextQuestion;
     }
-    // Retorna null ou lança erro quando não houver mais perguntas
-    throw new Error("Não há mais perguntas.");
+    throw new Error('Não há mais perguntas.');
   }
-  
+
   getTotalQuestions(): number {
     return this.questions.length;
   }
 
-  resetGame(numeroQuestoes: number): void {
-    this.questionCount = 0;  // Reseta o contador de perguntas
-    this.shuffleQuestions();  // Embaralha as perguntas
-    this.questions = this.questions.slice(0, numeroQuestoes);  // Limita o número de perguntas
+  exportQuestions(): void {
+    const questions = this.getAllQuestions();
+    if (!questions.length) {
+      alert('Nenhuma pergunta disponível para exportar.');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(questions)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'questions.json';
+    link.click();
+  }
+
+  importQuestions(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const questions = JSON.parse(reader.result as string);
+        SecureStorageService.setItem('questions', questions);
+        alert('Perguntas importadas com sucesso!');
+      } catch (e) {
+        alert('Erro ao importar perguntas.');
+      }
+    };
+    reader.readAsText(file);
   }
 }
+  
