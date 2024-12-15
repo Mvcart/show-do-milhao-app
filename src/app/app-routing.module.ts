@@ -6,41 +6,51 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'menu',
-    loadChildren: () => import('./menu/menu.module').then( m => m.MenuPageModule),
+    loadChildren: () =>
+      import('./menu/menu.module').then((m) => m.MenuPageModule),
     canActivate: [AuthGuard],
   },
   {
     path: 'question',
-    loadChildren: () => import('./question/question.module').then( m => m.QuestionPageModule)
+    loadChildren: () =>
+      import('./question/question.module').then((m) => m.QuestionPageModule),
   },
   {
     path: 'ending',
-    loadChildren: () => import('./ending/ending.module').then( m => m.EndingPageModule)
+    loadChildren: () =>
+      import('./ending/ending.module').then((m) => m.EndingPageModule),
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginPageModule),
   },
   {
     path: 'start-game',
-    loadChildren: () => import('./start-game/start-game.module').then( m => m.StartGamePageModule),
+    loadChildren: () =>
+      import('./start-game/start-game.module').then(
+        (m) => m.StartGamePageModule
+      ),
     canActivate: [AuthGuard],
   },
   {
     path: 'manage-questions',
-    loadChildren: () => import('./manage-questions/manage-questions.module').then( m => m.ManageQuestionsPageModule),
+    loadChildren: () =>
+      import('./manage-questions/manage-questions.module').then(
+        (m) => m.ManageQuestionsPageModule
+      ),
     canActivate: [AuthGuard],
   },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
