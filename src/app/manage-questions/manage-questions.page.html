@@ -1,74 +1,112 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Gerenciar Perguntas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
+<ion-content class="ion-padding">
+  <ion-button expand="block" color="secondary" (click)="irParaMenu()">
+    <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+    Voltar para o Menu
+  </ion-button>
+
+  <ion-segment
+    [(ngModel)]="selectedTab"
+    color="tertiary"
+    class="ion-margin-top"
+  >
+    <ion-segment-button value="add">
+      <ion-label>Adicionar Pergunta</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="edit">
+      <ion-label>Editar Perguntas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-card *ngIf="selectedTab === 'add'">
     <ion-card-header>
-      <ion-card-title>Adicionar Pergunta</ion-card-title>
+      <ion-card-title
+        >{{ isEditing ? 'Atualizar' : 'Adicionar' }} Pergunta</ion-card-title
+      >
     </ion-card-header>
     <ion-card-content>
-      <!-- Campo para o título da pergunta -->
       <ion-item>
-        <ion-label position="floating" for="question-title">Enunciado da Pergunta</ion-label>
-        <ion-input id="question-title" [(ngModel)]="question.title"></ion-input>
+        <ion-label position="stacked">Enunciado</ion-label>
+        <ion-input [(ngModel)]="newQuestion.title"></ion-input>
       </ion-item>
 
-      <!-- Campo para o índice da resposta correta -->
       <ion-item>
-        <ion-label position="floating" for="correct-answer">Índice da Resposta Correta</ion-label>
+        <ion-label position="stacked"
+          >Índice da Resposta Correta (1-4)</ion-label
+        >
         <ion-input
-          id="correct-answer"
           type="number"
-          [(ngModel)]="question.correctAnswer"
+          [(ngModel)]="newQuestion.correctAnswer"
+          min="1"
+          max="4"
         ></ion-input>
       </ion-item>
 
-      <!-- Campos para respostas -->
-      <ion-item *ngFor="let answer of question.answers; let i = index">
-        <ion-label position="floating" [attr.for]="'answer-' + i">Resposta {{ i + 1 }}</ion-label>
-        <ion-input [attr.id]="'answer-' + i" [(ngModel)]="answer.description"></ion-input>
+      <ion-item *ngFor="let answer of newQuestion.answers; let i = index">
+        <ion-label position="stacked">Resposta {{ i + 1 }}</ion-label>
+        <ion-input [(ngModel)]="answer.description"></ion-input>
       </ion-item>
 
-      <!-- Botões de ação -->
-      <ion-button expand="block" (click)="saveQuestion()">Salvar Pergunta</ion-button>
-      <ion-button expand="block" (click)="exportQuestions()">Exportar Perguntas</ion-button>
-      <ion-button expand="block" color="primary" (click)="irParaMenu()">Ir para o Menu</ion-button>
+      <ion-button
+        expand="block"
+        (click)="saveQuestion()"
+        class="ion-margin-top"
+      >
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        {{ isEditing ? 'Atualizar Pergunta' : 'Salvar Pergunta' }}
+      </ion-button>
     </ion-card-content>
   </ion-card>
 
-  <!-- Lista de perguntas -->
-  <ion-card>
+  <ion-card *ngIf="selectedTab === 'edit'">
     <ion-card-header>
       <ion-card-title>Perguntas Salvas</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let question of savedQuestions; let qIndex = index">
-          <ion-label>
-            <h2>{{ qIndex + 1 }}.  {{ question.title }}</h2> <!-- Ajuste do índice aqui -->
-            <div>
-              <strong>Respostas:</strong>
-              <ul>
-                <li *ngFor="let answer of question.answers; let i = index">
-                  {{ i + 1 }}. {{ answer.description }}
-                  <span *ngIf="i === question.correctAnswer" style="color: green; font-weight: bold;">
-                    (Correta)
-                  </span>
-                </li>
-              </ul>
-            </div>
+        <ion-item
+          *ngFor="let question of savedQuestions; let i = index"
+          class="ion-margin-bottom"
+        >
+          <ion-label class="ion-text-wrap">
+            <h2>{{ i + 1 }}. {{ question.title }}</h2>
+            <p>
+              <strong>Respostas:</strong><br />
+              <span *ngFor="let answer of question.answers; let j = index">
+                {{ j + 1 }}. {{ answer.description }}
+                <ion-text
+                  color="success"
+                  *ngIf="j === question.correctAnswer -1"
+                  >(Correta)</ion-text
+                ><br />
+              </span>
+            </p>
           </ion-label>
-          <ion-button width= "40px" color="danger" (click)="deleteQuestion(qIndex)">Excluir</ion-button>
-          <ion-button color="primary" (click)="editQuestion(qIndex)">Editar</ion-button>
-          <!-- Atualize o botão Salvar -->
-          <ion-button expand="block" (click)="saveQuestion()">
-         {{ isEditing ? 'Atualizar Pergunta' : 'Salvar Pergunta' }}
-        </ion-button>
+          <ion-buttons slot="end">
+            <ion-button color="primary" (click)="editQuestion(i)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" (click)="deleteQuestion(i)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-item>
       </ion-list>
+
+      <ion-button
+        expand="block"
+        color="danger"
+        (click)="clearAllQuestions()"
+        class="ion-margin-top"
+      >
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        Limpar Todas as Perguntas
+      </ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

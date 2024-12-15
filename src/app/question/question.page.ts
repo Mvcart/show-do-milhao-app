@@ -184,21 +184,19 @@ export class QuestionPage implements OnInit, OnDestroy {
   }
 
   doAnswer(answer: QuestionAnswer): void {
+    this.clearTimer(); // Para o temporizador quando uma resposta é selecionada
     this.speakText(answer.description);
 
-    if (this.curQuestion && this.curQuestion.answers[this.curQuestion.correctAnswer].description === answer.description) {
+    if (this.curQuestion && this.curQuestion.answers[this.curQuestion.correctAnswer] === answer) {
       this.speakText('Certa resposta');
       this.blinkScreen('correct-answer-blink');
       this.numQuestionsPlayed++;
-      setTimeout(() => this.loadQuestion(), 500);
-      const currentQuestion = this.questionService.getCurrentQuestion();
-console.log('Resposta correta esperada:', currentQuestion?.answers[currentQuestion?.correctAnswer]);
-
+      setTimeout(() => this.loadQuestion(), 2000); // Carrega a próxima pergunta após 2 segundos
     } else {
       this.speakText('Você errou');
       this.blinkScreen('wrong-answer-blink');
       this.numQuestionsPlayed++;
-      setTimeout(() => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'), 500);
+      setTimeout(() => this.finish('Fim de jogo', 'Você errou!', 'wrongAnswer'), 2000);
     }
   }
 
