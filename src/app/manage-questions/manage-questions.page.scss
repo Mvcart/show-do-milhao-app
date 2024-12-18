@@ -1,55 +1,94 @@
-$box-color: #ef6f6a;
-$box-color-secondary: #ec4743;
-$background: #01406b;
-$background-secondary: #022c5e;
+$primary-color: #01406b;
+$secondary-color: #022c5e;
+$accent-color: #ef6f6a;
 
 ion-content {
-  --background: linear-gradient(#01406b, #022c5e);
+  --background: #fafafa;
 }
 
 ion-card {
-  margin: 20px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.9);
 
   ion-card-header {
-    font-size: 22px;
+    background-color: $accent-color;
+    color: white;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  ion-card-title {
+    font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
   }
 
   ion-card-content {
-    ion-input {
-      margin-bottom: 15px;
-    }
-
-    ion-button {
-      --background: #3880ff;
-      --color: white;
-      width: 100%;
-    }
-
-    ion-label h2 {
-      font-size: 1.2em;
-      font-weight: bold;
-    }
-    
-    ion-label ul {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-    }
-    
-    ion-label ul li {
-      margin: 5px 0;
-    }
-
-    ion-label div {
-      margin-bottom: 10px;
-      color: #333;
-      font-size: 14px;
-    }
-    
-    
+    padding: 16px;
   }
+}
+
+ion-item {
+  --background: transparent;
+  --border-color: rgba(0, 0, 0, 0.1);
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+}
+
+ion-input {
+  --background: white;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
+ion-button {
+  --border-radius: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+ion-segment {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+ion-segment-button {
+  --background-checked: #{$accent-color};
+  --color-checked: white;
+  --border-radius: 6px;
+  font-weight: bold;
+}
+
+ion-list {
+  background-color: transparent;
+}
+
+ion-item-sliding {
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+ion-item-option {
+  border-radius: 0 8px 8px 0;
+}
+
+ion-label {
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+ion-input {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  margin-top: 8px; /* Updated margin-top value */
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 4px;
 }
