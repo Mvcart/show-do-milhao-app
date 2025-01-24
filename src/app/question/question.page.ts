@@ -88,7 +88,7 @@ export class QuestionPage implements OnInit, OnDestroy {
     this.clearTimer(); // Garante que o temporizador anterior seja limpo.
   
     try {
-      this.curQuestion = this.questionService.nextQuestion(); // Obtém a próxima pergunta.
+      this.curQuestion = this.questionService.getNextQuestion(); // Obtém a próxima pergunta.
       this.prizeInfo = this.questionService.getPrizeInfo(); // Atualiza os prêmios.
       this.timeLeft = environment.timePerQuestion; // Reinicia o tempo.
       
